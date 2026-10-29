@@ -34,5 +34,14 @@
   "slot": "Wednesday 6:00",
   "published": "2026-10-28T19:35",
   "pending": false
+ },
+ "thursday": {
+  "start": "2026-10-29T16:56:18Z",
+  "date": "2026-10-29",
+  "url": "https://us02web.zoom.us/rec/share/59rVcn3UWMHfQaYXL3vIxbO0Hi1qPeBSIzkjfcW4V1rE_Kt92rrpLxdJcj-sKaZi.We8Lsdh_ybyB0vLq?pwd=DPh14_70kfrIpDpTcAAAIAAAACmEOYu8XFoUdrttsSXl1-aaILXPcFkQIYAwIJ3PLGfOYLiNiar3hKiYoJkE7WSvoDAwMDAwNA",
+  "minutes": 51,
+  "slot": "Thursday 11:00",
+  "published": "2026-10-29T12:07",
+  "pending": true
  }
 }
