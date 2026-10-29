@@ -1,0 +1,33 @@
+# Every 20 min: if Zoom has a new class recording, point that slot's page at it and ping Christian's phone.
+# Source of bin/replay.py: yoga-pain-pro/.claude/skills/replays/replay.py (replay.py --install pushes it here).
+name: replays
+on:
+  schedule:
+    - cron: "*/20 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+concurrency: replays
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sweep Zoom
+        env:
+          ZOOM_ACCOUNT_ID: ${{ secrets.ZOOM_ACCOUNT_ID }}
+          ZOOM_CLIENT_ID: ${{ secrets.ZOOM_CLIENT_ID }}
+          ZOOM_CLIENT_SECRET: ${{ secrets.ZOOM_CLIENT_SECRET }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          git config user.name "Replay Bot"
+          git config user.email "replay-bot@users.noreply.github.com"
+          before=$(git rev-parse HEAD)
+          python3 bin/replay.py
+          if [ "$(git rev-parse HEAD)" != "$before" ]; then echo "PUBLISHED=1" >> "$GITHUB_ENV"; fi
+      - name: Rebuild the site
+        if: env.PUBLISHED == '1'
+        run: >
+          curl -fsS -X POST -H "Authorization: Bearer ${{ github.token }}"
+          https://api.github.com/repos/${{ github.repository }}/pages/builds

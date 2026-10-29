@@ -1,0 +1,38 @@
+{
+ "tuesday": {
+  "start": "2026-10-28T00:01:11Z",
+  "date": "2026-10-27",
+  "url": "https://us02web.zoom.us/rec/share/qizOc0M_vPck4A19b1moPffgMl2kxv0C7JeQC7Ml9UWnzVggkeHGHFdjtwPWKhnv.CqGScwBvZTN-012g",
+  "minutes": 45,
+  "slot": "Tuesday 6:00",
+  "published": "2026-10-28T14:02",
+  "pending": false
+ },
+ "saturday-945": {
+  "start": "2026-10-24T15:44:03Z",
+  "date": "2026-10-24",
+  "url": "https://us02web.zoom.us/rec/share/MBDy2-BEbPJigCcL9BCnEH1k2nYUz7JGNfOELyoLZ2C7AnbeIQqIc_4caq07xfFC.2M2xa_dUGBmX30s5",
+  "minutes": 45,
+  "slot": "Saturday 9:45",
+  "published": "2026-10-28T14:02",
+  "pending": false
+ },
+ "saturday-1045": {
+  "start": "2026-10-24T16:38:13Z",
+  "date": "2026-10-24",
+  "url": "https://us02web.zoom.us/rec/share/cl_7X-YWs5ibPLJ1Te5hlTxdrY7ifqTL2IBcmzuTzMaZWMPxnejKyO81pm33v-qK.x3DSb1Jme7jc-ejT",
+  "minutes": 51,
+  "slot": "Saturday 10:45",
+  "published": "2026-10-28T14:02",
+  "pending": false
+ },
+ "wednesday": {
+  "start": "2026-10-28T23:49:50Z",
+  "date": "2026-10-28",
+  "url": "https://us02web.zoom.us/rec/share/BYol_2abGTgXLK4CjRHzqxBihRc2E69mJ4eeaD5OtOtFh6JWQTcC1ethwTGFVIR8.3DCqsIFZWUXnU4Uu?pwd=DLRLJICGcX5NZl3NSQAAIAAAAP6g2eviPGyQVPaA-G6qj0_4u8oYr05T85NH2oy_JbeDhf6lyzzXVVIvWhLaOudPgzAwMDAwNA",
+  "minutes": 60,
+  "slot": "Wednesday 6:00",
+  "published": "2026-10-28T19:35",
+  "pending": true
+ }
+}
