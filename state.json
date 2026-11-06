@@ -42,6 +42,6 @@
   "minutes": 63,
   "slot": "Thursday 11:00",
   "published": "2026-11-05T13:16",
-  "pending": true
+  "pending": false
  }
 }
