@@ -24,7 +24,7 @@
   "minutes": 47,
   "slot": "Saturday 10:45",
   "published": "2026-11-07T22:18",
-  "pending": true
+  "pending": false
  },
  "wednesday": {
   "start": "2026-11-05T00:52:35Z",
