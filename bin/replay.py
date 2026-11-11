@@ -13,6 +13,7 @@ forwards to the newest Zoom cloud recording of that class. Nobody edits Skool af
                        texts on Reach Outs fill in. If the class isn't logged yet it waits and says so.
   replay.py --install  in-repo: copy this script to ~/.config/replay/bin, clone the site, load the launchd job.
   replay.py --status   what each slot points at now.
+  replay.py --rebuild  rewrite all pages from state.json (after a page-format change) and push.
 
 RUNS IN THE CLOUD (his yes, Oct 28: "run with the laptop closed"): the background sweep is a GitHub Actions
 schedule in the replay repo (.github/workflows/replays.yml, every 20 min) running bin/replay.py there, with the
@@ -92,7 +93,10 @@ def latest(tok, meeting):
             "minutes": d.get("duration")}
 
 
-def page(title, rec):
+def page(title, rec, expires=True):
+    """expires=False → the Skool page (/replay/<slug>/): always opens the newest recording, replaced by the next
+    class (his call Nov 11 2026: "give zoom its own with no expiry, it'll be down in a week anyways").
+    expires=True → the texted page (/replay/text/<slug>/): 4-day window, the gate for missed-class texts."""
     exp = (datetime.date.fromisoformat(rec["date"]) + datetime.timedelta(days=EXPIRE_DAYS)).isoformat()
     day = datetime.date.fromisoformat(rec["date"]).strftime("%a %b %-d")
     good = (datetime.date.fromisoformat(exp) - datetime.timedelta(days=1)).strftime("%A, %b %-d")
@@ -105,7 +109,7 @@ color:#2d1b3d;background:#faf7f2;text-align:center}}a{{color:#5b2a86;font-weight
 <h2>{title} class replay</h2>
 <p id=m>Class from {day}. Opening the recording…<br><a href="{url}">Tap here if it doesn't open</a></p>
 <script>
-if (new Date() >= new Date("{exp}T00:00:00-07:00")) {{
+if ({'true' if expires else 'false'} && new Date() >= new Date("{exp}T00:00:00-07:00")) {{
   document.getElementById("m").innerHTML = "This replay (from {day}) has expired. The next class's replay goes up here after class.";
 }} else {{ location.replace("{rec['url']}"); }}
 </script>
@@ -147,6 +151,25 @@ def save_state(s):
     STATE.write_text(json.dumps(s, indent=1))
 
 
+def write_pages(slug, title, rec):
+    (SITE / slug).mkdir(parents=True, exist_ok=True)
+    (SITE / slug / "index.html").write_text(page(title, rec, expires=False))   # Skool: never expires
+    (SITE / "text" / slug).mkdir(parents=True, exist_ok=True)
+    (SITE / "text" / slug / "index.html").write_text(page(title, rec))         # texts: 4-day window
+
+
+def rebuild():
+    """Rewrite every slot's pages from state.json (after a page-format change), push."""
+    git("pull", "-q", "--rebase", "origin", "main")
+    state = load_state()
+    for slug, (_, _, title) in SLOTS.items():
+        if state.get(slug, {}).get("url"):
+            write_pages(slug, title, state[slug])
+    git("add", "-A")
+    git("commit", "-q", "-m", "Replay pages rebuilt: Skool pages never expire, texts → /text/<slug>/")
+    print(git("push", "-q", "origin", "HEAD:main").stderr.strip() or "rebuilt + pushed")
+
+
 def sweep(seed=False):
     """Background run. seed=True (first install): publish what's there now, but don't queue texts or ping."""
     state, tok, changed = load_state(), token(), []
@@ -155,8 +178,7 @@ def sweep(seed=False):
         rec = latest(tok, meeting)
         if not rec or state.get(slug, {}).get("start") == rec["start"]:
             continue
-        (SITE / slug).mkdir(parents=True, exist_ok=True)
-        (SITE / slug / "index.html").write_text(page(title, rec))
+        write_pages(slug, title, rec)
         state[slug] = {**rec, "slot": slot, "published": datetime.datetime.now().isoformat(timespec="minutes"),
                        "pending": not seed}
         changed.append((slug, slot, rec))
@@ -198,7 +220,7 @@ def apply():
     for slug, v in todo:
         exp = (datetime.date.fromisoformat(v["date"]) + datetime.timedelta(days=EXPIRE_DAYS)).isoformat()
         r = subprocess.run([sys.executable, str(att), "replay", v["date"], v["slot"],
-                            "--link", f"{PUBLIC}/{slug}/", "--expires", exp], capture_output=True, text=True)
+                            "--link", f"{PUBLIC}/text/{slug}/", "--expires", exp], capture_output=True, text=True)
         out = (r.stdout + r.stderr).strip()
         if r.returncode == 0:
             v["pending"] = False
@@ -240,5 +262,7 @@ if __name__ == "__main__":
         apply()
     elif "--status" in a:
         status()
+    elif "--rebuild" in a:
+        rebuild()
     else:
         sweep()
