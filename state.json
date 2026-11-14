@@ -15,7 +15,7 @@
   "minutes": 43,
   "slot": "Saturday 9:45",
   "published": "2026-11-14T20:32",
-  "pending": true
+  "pending": false
  },
  "saturday-1045": {
   "start": "2026-11-14T17:45:09Z",
@@ -24,7 +24,7 @@
   "minutes": 45,
   "slot": "Saturday 10:45",
   "published": "2026-11-14T20:32",
-  "pending": true
+  "pending": false
  },
  "wednesday": {
   "start": "2026-11-12T00:59:07Z",
