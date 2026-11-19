@@ -33,7 +33,7 @@
   "minutes": 46,
   "slot": "Wednesday 6:00",
   "published": "2026-11-19T04:30",
-  "pending": true
+  "pending": false
  },
  "thursday": {
   "start": "2026-11-19T18:00:09Z",
@@ -42,6 +42,6 @@
   "minutes": 45,
   "slot": "Thursday 11:00",
   "published": "2026-11-19T22:02",
-  "pending": true
+  "pending": false
  }
 }
